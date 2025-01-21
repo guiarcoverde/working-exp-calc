@@ -52,9 +52,35 @@ export class AppComponent {
 
       });
 
-      const anos = Math.floor(totalDias / 365);
-      const meses = Math.floor((totalDias % 365) / 30);
-      const dias = totalDias % 30;
+      let anos = 0;
+      let meses = 0;
+      let dias = 0;
+
+      intervalosValidos.forEach(intervalo => {
+        let inicio = intervalo.inicio;
+        let termino = intervalo.termino;
+
+        while (inicio < termino) {
+          const proximoMes = new Date(
+            inicio.getFullYear(),
+            inicio.getMonth() + 1,
+            inicio.getDate()
+          );
+          if (proximoMes <= termino) {
+            meses++;
+            inicio = proximoMes;
+          } else {
+            break;
+          }
+        }
+
+        dias += Math.floor(
+          (termino.getTime() - inicio.getTime()) / (1000 * 60 * 60 * 24)
+        );
+      });
+
+      anos = Math.floor(meses / 12);
+      meses = meses % 12;
 
       this.resultado = `${anos} ano(s), ${meses} mês(es), ${dias} dia(s) de experiência total. (${totalDias} dias)`;
     }
