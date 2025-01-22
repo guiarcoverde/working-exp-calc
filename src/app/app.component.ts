@@ -6,22 +6,25 @@ import {BsDatepickerInputDirective} from 'ngx-bootstrap/datepicker';
 
 @Component({
   selector: 'app-root',
-  imports: [RouterOutlet, FormsModule, NgForOf, NgIf, DatePipe],
+  imports: [FormsModule, NgForOf, NgIf],
   templateUrl: './app.component.html',
   styleUrl: './app.component.css'
 })
 export class AppComponent {
+
     empregos: {dataInicio: string | number; dataTermino: string | number}[] = [
       {dataInicio: '', dataTermino: ''},
     ];
 
     adicionarExperiencia(): void {
       this.empregos.push({dataInicio: '', dataTermino: ''});
+      this.erros.push('');
     }
 
     resultado: string | null = null;
+    erros: string[] = [];
 
-    calcularTempoDeExperiencia() {
+    calcularTempoDeExperiencia(): void {
       const intervalos = this.empregos
         .filter(emprego => emprego.dataInicio && emprego.dataTermino)
         .map(emprego => ({
@@ -83,5 +86,26 @@ export class AppComponent {
       meses = meses % 12;
 
       this.resultado = `${anos} ano(s), ${meses} mês(es), ${dias} dia(s) de experiência total. (${totalDias} dias)`;
+    }
+
+    validarDatas(index: number): void{
+      const emprego = this.empregos[index];
+      const dataInicio = emprego.dataInicio ? new Date(emprego.dataInicio) : null;
+      const dataTermino = emprego.dataTermino ? new Date(emprego.dataTermino) : null;
+
+      if (dataInicio && dataTermino && dataInicio > dataTermino) {
+        this.erros[index] = 'Data de início não pode ser posterior à data de término.';
+
+        setTimeout(() => {
+          this.empregos[index].dataInicio = '';
+          this.empregos[index].dataTermino = '';
+        })
+      } else {
+        this.erros[index] = '';
+      }
+    }
+
+    removerExperiencia(index: number): void {
+      this.empregos.splice(index, 1);
     }
 }

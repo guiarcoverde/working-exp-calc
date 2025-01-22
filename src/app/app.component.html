@@ -5,26 +5,34 @@
 <div class="container">
   <h1>Experiências Profissionais</h1>
   <div *ngFor="let emprego of empregos; let i = index" class="experience">
-    <h2>Emprego {{i + 1}}</h2>
+    <div class="subtitulo">
+      <h2>Emprego {{i + 1}}</h2>
+      <button class="remove-experience" (click)="removerExperiencia(i)">Excluir</button>
+    </div>
+    <div class="form-container">
+      <form class="formulario">
+        <div class="inicio">
+          <span>Data de Início</span>
+          <input type="date"  id="inicio-{{i}}" [(ngModel)]="emprego.dataInicio" (ngModelChange)="validarDatas(i)" name="inicio-{{i}}">
+        </div>
 
-    <form class="formulario">
-      <div class="inicio">
-        <span>Data de Início</span>
-        <input type="date"  id="inicio-{{i}}" [(ngModel)]="emprego.dataInicio" name="inicio-{{i}}">
-      </div>
+        <div class="inicio">
+          <span>Data de Término</span>
+          <input type="date" id="termino-{{i}}" [(ngModel)]="emprego.dataTermino" (ngModelChange)="validarDatas(i)" name="termino-{{i}}">
+        </div>
 
-      <div class="inicio">
-        <span>Data de Término</span>
-        <input type="date" id="termino-{{i}}"[(ngModel)]="emprego.dataTermino" name="termino-{{i}}">
+      </form>
+      <div *ngIf="erros[i]" class="erro">
+        {{erros[i]}}
       </div>
-    </form>
+    </div>
   </div>
 
   <div class="botoes">
     <button (click)="adicionarExperiencia()">Adicionar Experiência</button>
     <button (click)="calcularTempoDeExperiencia()">Calcular Experiência</button>
   </div>
-
+  
   <div *ngIf="resultado">
     <h2>Resultado</h2>
     <p>{{resultado}}</p>
