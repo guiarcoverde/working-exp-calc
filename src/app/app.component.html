@@ -18,7 +18,7 @@
 
         <div class="inicio">
           <span>Data de Término</span>
-          <input type="date" id="termino-{{i}}" [(ngModel)]="emprego.dataTermino" (ngModelChange)="validarDatas(i)" name="termino-{{i}}">
+          <input type="date" id="termino-{{i}}" [(ngModel)]="emprego.dataTermino" (blur)="validarDatas(i)" name="termino-{{i}}">
         </div>
 
       </form>
@@ -32,7 +32,7 @@
     <button (click)="adicionarExperiencia()">Adicionar Experiência</button>
     <button (click)="calcularTempoDeExperiencia()">Calcular Experiência</button>
   </div>
-  
+
   <div *ngIf="resultado">
     <h2>Resultado</h2>
     <p>{{resultado}}</p>
