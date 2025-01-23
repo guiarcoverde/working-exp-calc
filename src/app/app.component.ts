@@ -92,7 +92,12 @@ export class AppComponent {
         anos++;
       }
 
-      this.resultado = `${anos} ano(s), ${meses} mês(es), ${dias} dia(s) de experiência total. (${totalDias} dias)`;
+      let anosStr = anos === 1 ? "1 ano" : anos > 1 ? `${anos} anos` : "";
+      let mesesStr = meses === 1 ? "1 mês" : meses > 0 ? `${meses} meses` : "";
+      let diasStr = dias === 1 ? "1 dia" : dias > 0 ? `${dias} dias` : "";
+      
+      let partes = [anosStr, mesesStr, diasStr].filter((parte) => parte !== ""); // Filtra partes vazias
+      this.resultado = `${partes.join(", ")} de experiência total. (${totalDias} dias)`;
     }
 
   validarDatas(index: number): void {
