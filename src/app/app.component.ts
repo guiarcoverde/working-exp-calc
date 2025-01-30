@@ -21,84 +21,116 @@ export class AppComponent {
       this.erros.push('');
     }
 
-    resultado: string | null = null;
+    resultadoDias: string | number |null = null;
+    resultadoMeses: string | number |null = null;
+
     erros: string[] = [];
 
-    calcularTempoDeExperiencia(): void {
-      const intervalos = this.empregos
-        .filter(emprego => emprego.dataInicio && emprego.dataTermino)
-        .map(emprego => ({
-          inicio: new Date(emprego.dataInicio),
-          termino: new Date(emprego.dataTermino),
-        }))
-        .sort((a, b) => a.inicio.getTime() - b.inicio.getTime());
+  calcularTempoDeExperiencia(): void {
+    const intervalos = this.empregos
+      .filter(emprego => emprego.dataInicio && emprego.dataTermino)
+      .map(emprego => ({
+        inicio: new Date(emprego.dataInicio),
+        termino: new Date(emprego.dataTermino),
+      }))
+      .sort((a, b) => a.inicio.getTime() - b.inicio.getTime());
 
-      const intervalosValidos: {inicio: Date, termino: Date}[] = [];
+    const intervalosValidos: { inicio: Date; termino: Date }[] = [];
 
-      intervalos.forEach(intervalo => {
-        if(intervalosValidos.length === 0 || intervalosValidos[intervalosValidos.length - 1].termino < intervalo.inicio){
-          intervalosValidos.push(intervalo);
-        } else {
-          const ultimo = intervalosValidos[intervalosValidos.length - 1];
-          ultimo.termino = new Date(
-            Math.max(ultimo.termino.getTime(), intervalo.termino.getTime())
-          );
-        }
-      });
-
-      let totalDias = 0;
-      intervalosValidos.forEach(intervalo => {
-        const diff = Math.ceil(
-          (intervalo.termino.getTime() - intervalo.inicio.getTime()) / (1000 * 60 * 60 * 24)
+    intervalos.forEach(intervalo => {
+      if (
+        intervalosValidos.length === 0 ||
+        intervalosValidos[intervalosValidos.length - 1].termino < intervalo.inicio
+      ) {
+        intervalosValidos.push(intervalo);
+      } else {
+        const ultimo = intervalosValidos[intervalosValidos.length - 1];
+        ultimo.termino = new Date(
+          Math.max(ultimo.termino.getTime(), intervalo.termino.getTime())
         );
+      }
+    });
+
+    let totalMeses = 0;
+    intervalosValidos.forEach(intervalo => {
+      let inicio = new Date(intervalo.inicio);
+      let termino = new Date(intervalo.termino);
+
+      // Calcula a diferença de meses
+      let anosDeDiferenca = termino.getFullYear() - inicio.getFullYear();
+      let mesesDeDiferenca = termino.getMonth() - inicio.getMonth();
+
+      // Se o mês de término for antes do mês de início no mesmo ano, subtrai um ano de diferença
+      if (mesesDeDiferenca < 0) {
+        anosDeDiferenca--;
+        mesesDeDiferenca += 12;
+      }
+
+      // A diferença total de meses é anosDeDiferenca * 12 + mesesDeDiferenca
+      totalMeses += anosDeDiferenca * 12 + mesesDeDiferenca;
+    });
+
+
+    let totalDias = 0;
+    intervalosValidos.forEach(intervalo => {
+      const inicio = intervalo.inicio.getTime();
+      const termino = intervalo.termino.getTime();
+
+      // Verifica se a data de término é posterior à de início, para evitar números negativos
+      if (termino >= inicio) {
+        const diff = Math.ceil(((termino - inicio) / (1000 * 60 * 60 * 24)) + 1); // Inclui o último dia
         totalDias += diff;
+      }
+    });
+    let anos = 0;
+    let meses = 0;
+    let dias = 0;
 
-      });
+    intervalosValidos.forEach(intervalo => {
+      let inicio = new Date(intervalo.inicio);
+      let termino = new Date(intervalo.termino);
 
-      let anos = 0;
-      let meses = 0;
-      let dias = 0;
-
-      intervalosValidos.forEach(intervalo => {
-        let inicio = intervalo.inicio;
-        let termino = intervalo.termino;
-
-        while (inicio < termino) {
-          const proximoMes = new Date(
-            inicio.getFullYear(),
-            inicio.getMonth() + 1,
-            inicio.getDate()
-          );
-          if (proximoMes <= termino) {
-            meses++;
-            inicio = proximoMes;
-          } else {
-            break;
-          }
+      // Calcula diferença de anos
+      while (inicio.getFullYear() < termino.getFullYear()) {
+        if (
+          inicio.getMonth() === termino.getMonth() &&
+          inicio.getDate() > termino.getDate()
+        ) {
+          break;
         }
-
-        dias += Math.floor(
-          (termino.getTime() - inicio.getTime()) / (1000 * 60 * 60 * 24)
-        );
-      });
-
-      while (dias >= 30) {
-        dias -= 30;
-        meses++;
-      }
-
-      while (meses >= 12) {
-        meses -= 12;
         anos++;
+        inicio.setFullYear(inicio.getFullYear() + 1);
       }
 
-      let anosStr = anos === 1 ? "1 ano" : anos > 1 ? `${anos} anos` : "";
-      let mesesStr = meses === 1 ? "1 mês" : meses > 0 ? `${meses} meses` : "";
-      let diasStr = dias === 1 ? "1 dia" : dias > 0 ? `${dias} dias` : "";
-      
-      let partes = [anosStr, mesesStr, diasStr].filter((parte) => parte !== ""); // Filtra partes vazias
-      this.resultado = `${partes.join(", ")} de experiência total. (${totalDias} dias)`;
-    }
+      // Calcula diferença de meses
+      while (
+        inicio.getFullYear() === termino.getFullYear() &&
+        inicio.getMonth() < termino.getMonth()
+        ) {
+        meses++;
+        inicio.setMonth(inicio.getMonth() + 1);
+      }
+
+      // Calcula diferença de dias
+      dias += Math.floor(
+        ((termino.getTime() - inicio.getTime()) / (1000 * 60 * 60 * 24)) + 1
+      );
+    });
+
+// Aqui é onde você cria a mensagem
+    let anosStr = anos === 1 ? "1 ano" : anos > 1 ? `${anos} anos` : "";
+    let mesesStr = meses === 1 ? "1 mês" : meses > 0 ? `${meses} meses` : "";
+    let diasStr = dias === 1 ? "1 dia" : dias > 0 ? `${dias} dias` : "";
+
+// Para o total de meses
+    let totalMesesStr = totalMeses > 0 ? `${totalMeses} meses` : "";
+
+// Montar o resultado com os elementos disponíveis
+
+    this.resultadoDias = totalDias;
+    this.resultadoMeses = totalMeses;
+
+  }
 
   validarDatas(index: number): void {
     const emprego = this.empregos[index];
