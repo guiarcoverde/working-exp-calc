@@ -1,8 +1,6 @@
-import { Component } from '@angular/core';
-import { RouterOutlet } from '@angular/router';
+import { Component, HostListener } from '@angular/core';
 import {FormsModule} from '@angular/forms';
-import {DatePipe, NgForOf, NgIf} from '@angular/common';
-import {BsDatepickerInputDirective} from 'ngx-bootstrap/datepicker';
+import { NgForOf, NgIf } from '@angular/common';
 
 @Component({
   selector: 'app-root',
@@ -21,8 +19,7 @@ export class AppComponent {
       this.erros.push('');
     }
 
-    resultadoDias: string | number |null = null;
-    resultadoMeses: string | number |null = null;
+    resultado: string | number | null = null;
 
     erros: string[] = [];
 
@@ -86,50 +83,64 @@ export class AppComponent {
     let meses = 0;
     let dias = 0;
 
+    const getDateDifference = (start: Date, end: Date): { years: number, months: number, days: number } => {
+      let years = end.getFullYear() - start.getFullYear();
+      let months = end.getMonth() - start.getMonth();
+      let days = end.getDate() - start.getDate();
+
+      if (days < 0) {
+        months--;
+        const tempDate = new Date(end.getFullYear(), end.getMonth(), 0);
+        days += tempDate.getDate();
+      }
+
+      if (months < 0) {
+        years--;
+        months += 12;
+      }
+
+      return { years, months, days };
+    };
+
     intervalosValidos.forEach(intervalo => {
-      let inicio = new Date(intervalo.inicio);
-      let termino = new Date(intervalo.termino);
+      const inicio = new Date(intervalo.inicio);
+      const termino = new Date(intervalo.termino);
 
-      // Calcula diferença de anos
-      while (inicio.getFullYear() < termino.getFullYear()) {
-        if (
-          inicio.getMonth() === termino.getMonth() &&
-          inicio.getDate() > termino.getDate()
-        ) {
-          break;
-        }
-        anos++;
-        inicio.setFullYear(inicio.getFullYear() + 1);
-      }
+      if (termino < inicio) return;
 
-      // Calcula diferença de meses
-      while (
-        inicio.getFullYear() === termino.getFullYear() &&
-        inicio.getMonth() < termino.getMonth()
-        ) {
-        meses++;
-        inicio.setMonth(inicio.getMonth() + 1);
-      }
-
-      // Calcula diferença de dias
-      dias += Math.floor(
-        ((termino.getTime() - inicio.getTime()) / (1000 * 60 * 60 * 24)) + 1
-      );
+      const diff = getDateDifference(inicio, termino);
+      anos += diff.years;
+      meses += diff.months;
+      dias += diff.days;
     });
 
-// Aqui é onde você cria a mensagem
+    // Ajuste para dias excedentes (ex: 30 dias vira 1 mês)
+    if (dias >= 30) {
+      const mesesExtras = Math.floor(dias / 30);
+      meses += mesesExtras;
+      dias = dias % 30;
+    }
+
+    // Ajuste para meses excedentes (ex: 12 meses vira 1 ano)
+    if (meses >= 12) {
+      const anosExtras = Math.floor(meses / 12);
+      anos += anosExtras;
+      meses = meses % 12;
+    }
+
+    // Formatação do resultado
     let anosStr = anos === 1 ? "1 ano" : anos > 1 ? `${anos} anos` : "";
     let mesesStr = meses === 1 ? "1 mês" : meses > 0 ? `${meses} meses` : "";
     let diasStr = dias === 1 ? "1 dia" : dias > 0 ? `${dias} dias` : "";
 
-// Para o total de meses
-    let totalMesesStr = totalMeses > 0 ? `${totalMeses} meses` : "";
-
-// Montar o resultado com os elementos disponíveis
-
-    this.resultadoDias = totalDias;
-    this.resultadoMeses = totalMeses;
-
+    const partes = [anosStr, mesesStr, diasStr].filter(parte => parte !== "");
+    // Adiciona "e" antes do último elemento se houver mais de um componente
+    if (partes.length > 1) {
+      const ultimo = partes.pop();
+      this.resultado = `${partes.join(", ")} e ${ultimo}. (${totalDias} dias)`;
+    } else {
+      this.resultado = `${partes.join(", ")}. (${totalDias} dias)`;
+    }
   }
 
   validarDatas(index: number): void {
@@ -150,7 +161,29 @@ export class AppComponent {
     }
   }
 
-    removerExperiencia(index: number): void {
+  removerExperiencia(index: number): void {
       this.empregos.splice(index, 1);
     }
+
+
+  private hasUnsavedData(): boolean {
+    return this.empregos.some(emprego =>
+      emprego.dataInicio.trim() !== '' || emprego.dataTermino.trim() !== ''
+    );
+  }
+
+  // Handler para o evento beforeunload
+  @HostListener('window:beforeunload', ['$event'])
+  handleBeforeUnload(event: BeforeUnloadEvent): void {
+    if (this.hasUnsavedData()) {
+      event.preventDefault();
+      event.returnValue = true;
+    }
+  }
+
+  // Remove o listener quando o componente é destruído
+  ngOnDestroy(): void {
+    window.removeEventListener('beforeunload', this.handleBeforeUnload);
+  }
+
 }

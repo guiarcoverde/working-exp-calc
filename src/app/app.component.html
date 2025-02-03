@@ -33,9 +33,8 @@
     <button (click)="calcularTempoDeExperiencia()">Calcular Experiência</button>
   </div>
 
-  <div *ngIf="resultadoDias">
+  <div *ngIf="resultado">
     <h2>Resultado</h2>
-    <p>Dias passados: {{resultadoDias}}</p>
-    <p *ngIf="resultadoMeses">Meses passados: {{resultadoMeses}}</p>
+    <p>{{resultado}}</p>
   </div>
 </div>
