@@ -164,7 +164,12 @@ export class AppComponent {
   removerExperiencia(index: number): void {
       this.empregos.splice(index, 1);
     }
-
+  
+  removerTodasAsExperiencias(): void {
+    this.empregos = [{ dataInicio: '', dataTermino: ''}];
+    this.erros = [''];
+    this.resultado = null;
+  }
 
   private hasUnsavedData(): boolean {
     return this.empregos.some(emprego =>

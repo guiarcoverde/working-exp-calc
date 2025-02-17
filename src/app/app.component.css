@@ -103,3 +103,7 @@ button:hover {
   font-family: Inter, serif;
   background-color: red;
 }
+
+.remove-all{
+  background-color: red;
+}
