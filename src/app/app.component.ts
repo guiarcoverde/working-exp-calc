@@ -32,6 +32,11 @@ export class AppComponent {
       }))
       .sort((a, b) => a.inicio.getTime() - b.inicio.getTime());
 
+    if (intervalos.length === 0) {
+      this.resultado = "Não é possível calcular sem inserir datas.";
+      return;
+    }
+
     const intervalosValidos: { inicio: Date; termino: Date }[] = [];
 
     intervalos.forEach(intervalo => {
@@ -162,9 +167,14 @@ export class AppComponent {
   }
 
   removerExperiencia(index: number): void {
-      this.empregos.splice(index, 1);
+    if (this.empregos.length === 1) {
+      alert("Não é possível remover um único emprego cadastrado.")
+      return;
     }
-  
+
+    this.empregos.splice(index, 1);
+    }
+
   removerTodasAsExperiencias(): void {
     this.empregos = [{nome: '', dataInicio: '', dataTermino: ''}];
     this.erros = [''];
