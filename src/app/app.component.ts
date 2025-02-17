@@ -10,12 +10,12 @@ import { NgForOf, NgIf } from '@angular/common';
 })
 export class AppComponent {
 
-    empregos: {dataInicio: string; dataTermino: string}[] = [
-      {dataInicio: '', dataTermino: ''},
+    empregos: {nome: string; dataInicio: string; dataTermino: string}[] = [
+      {nome: '', dataInicio: '', dataTermino: ''},
     ];
 
     adicionarExperiencia(): void {
-      this.empregos.push({dataInicio: '', dataTermino: ''});
+      this.empregos.push({nome: '', dataInicio: '', dataTermino: ''});
       this.erros.push('');
     }
 
@@ -166,7 +166,7 @@ export class AppComponent {
     }
   
   removerTodasAsExperiencias(): void {
-    this.empregos = [{ dataInicio: '', dataTermino: ''}];
+    this.empregos = [{nome: '', dataInicio: '', dataTermino: ''}];
     this.erros = [''];
     this.resultado = null;
   }

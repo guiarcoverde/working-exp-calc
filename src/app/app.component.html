@@ -11,6 +11,11 @@
     </div>
     <div class="form-container">
       <form class="formulario">
+        <div class="nome-experiencia">
+          <span>Nome da Experiência</span>
+          <input type="text" id="nome-{{i}}" [(ngModel)]="emprego.nome" name="nome-{{ i }}">
+        </div>
+
         <div class="inicio">
           <span>Data de Início</span>
           <input type="date"  id="inicio-{{i}}" [(ngModel)]="emprego.dataInicio" (ngModelChange)="validarDatas(i)" name="inicio-{{i}}">
