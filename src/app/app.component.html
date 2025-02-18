@@ -7,7 +7,9 @@
   <div *ngFor="let emprego of empregos; let i = index" class="experience">
     <div class="subtitulo">
       <h2>Emprego {{i + 1}}</h2>
-      <button class="remove-experience" (click)="removerExperiencia(i)">Excluir</button>
+      <button mat-icon-button color="warn" class="remove-experience" (click)="removerExperiencia(i)">
+        <mat-icon>delete</mat-icon>
+      </button>
     </div>
     <div class="form-container">
       <form class="formulario">
@@ -36,7 +38,7 @@
   <div class="botoes">
     <button (click)="adicionarExperiencia()">Adicionar Experiência</button>
     <button (click)="calcularTempoDeExperiencia()">Calcular Experiência</button>
-    <button class="remove-all" (click)="removerTodasAsExperiencias()">Excluir Todas</button>
+    <button class="remove-all" (click)="removerTodasAsExperiencias()">Excluir Tudo</button>
   </div>
 
   <div *ngIf="resultado">

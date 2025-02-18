@@ -1,10 +1,11 @@
 import { Component, HostListener } from '@angular/core';
 import {FormsModule} from '@angular/forms';
 import { NgForOf, NgIf } from '@angular/common';
+import { MatIconModule } from '@angular/material/icon';
 
 @Component({
   selector: 'app-root',
-  imports: [FormsModule, NgForOf, NgIf],
+  imports: [FormsModule, NgForOf, NgIf, MatIconModule],
   templateUrl: './app.component.html',
   styleUrl: './app.component.css'
 })
