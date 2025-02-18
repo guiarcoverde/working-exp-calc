@@ -14,7 +14,7 @@
     <div class="form-container">
       <form class="formulario">
         <div class="nome-experiencia">
-          <span>Nome da Experiência</span>
+          <span>Função Exercida</span>
           <input type="text" id="nome-{{i}}" [(ngModel)]="emprego.nome" name="nome-{{ i }}">
         </div>
 
@@ -23,7 +23,7 @@
           <input type="date"  id="inicio-{{i}}" [(ngModel)]="emprego.dataInicio" (ngModelChange)="validarDatas(i)" name="inicio-{{i}}">
         </div>
 
-        <div class="inicio">
+        <div class="termino">
           <span>Data de Término</span>
           <input type="date" id="termino-{{i}}" [(ngModel)]="emprego.dataTermino" (blur)="validarDatas(i)" name="termino-{{i}}">
         </div>
@@ -36,9 +36,9 @@
   </div>
 
   <div class="botoes">
-    <button (click)="adicionarExperiencia()">Adicionar Experiência</button>
-    <button (click)="calcularTempoDeExperiencia()">Calcular Experiência</button>
-    <button class="remove-all" (click)="removerTodasAsExperiencias()">Excluir Tudo</button>
+    <button class="add-experience" (click)="adicionarExperiencia()">Adicionar Experiência</button>
+    <button class="calculate-experience" (click)="calcularTempoDeExperiencia()">Calcular Experiência</button>
+    <button class="remove-all" (click)="removerTodasAsExperiencias()">Limpar Tudo</button>
   </div>
 
   <div *ngIf="resultado">

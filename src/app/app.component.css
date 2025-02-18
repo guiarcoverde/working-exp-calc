@@ -44,7 +44,6 @@ button {
   padding: 0.5rem 1rem;
   font-size: 1rem;
   color: white;
-  background-color: #007bff;
   border: none;
   border-radius: 0.25rem;
   cursor: pointer;
@@ -52,8 +51,20 @@ button {
   font-family: Inter, serif;
 }
 
-button:hover {
-  background-color: #0056b3 !important;
+.add-experience {
+  background-color: #007bff;
+}
+
+.calculate-experience {
+  background-color: #007bff;
+}
+
+.add-experience:hover {
+  background-color: #0056b3;
+}
+
+.calculate-experience:hover {
+  background-color: #0056b3;
 }
 
 .inicio {
@@ -101,9 +112,17 @@ button:hover {
   display: flex;
   align-items: center;
   font-family: Inter, serif;
-  background-color: red;
+  background-color: #FF0000;
+}
+
+.remove-experience:hover {
+  background-color: #DC143C;
 }
 
 .remove-all{
-  background-color: red;
+  background-color: #FF0000;
+}
+
+.remove-all:hover {
+  background-color: #DC143C;
 }

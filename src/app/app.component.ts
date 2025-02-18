@@ -174,7 +174,7 @@ export class AppComponent {
     }
 
     this.empregos.splice(index, 1);
-    }
+  }
 
   removerTodasAsExperiencias(): void {
     this.empregos = [{nome: '', dataInicio: '', dataTermino: ''}];
