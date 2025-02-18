@@ -51,6 +51,13 @@ button {
   font-family: Inter, serif;
 }
 
+.termino-container {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+
 .add-experience {
   background-color: #007bff;
 }
@@ -107,11 +114,9 @@ button {
 }
 
 .remove-experience {
-  margin-left: 1rem;
   height: 32px;
   display: flex;
   align-items: center;
-  font-family: Inter, serif;
   background-color: #FF0000;
 }
 
