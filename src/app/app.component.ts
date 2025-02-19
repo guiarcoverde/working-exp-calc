@@ -202,4 +202,13 @@ export class AppComponent {
     window.removeEventListener('beforeunload', this.handleBeforeUnload);
   }
 
+  ngOnInit(): void {
+    if (sessionStorage.getItem('firstLoad') !== 'true') {
+      sessionStorage.setItem('firstLoad', 'true');
+      location.reload();
+    } else {
+      sessionStorage.removeItem('firstLoad');
+    }
+  }
+
 }
