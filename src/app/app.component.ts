@@ -23,7 +23,8 @@ export class AppComponent {
     resultado: string | number | null = null;
 
     erros: string[] = [];
-
+  
+  // É possível separar os blocos em métodos?
   calcularTempoDeExperiencia(): void {
     const intervalos = this.empregos
       .filter(emprego => emprego.dataInicio && emprego.dataTermino)
@@ -40,6 +41,7 @@ export class AppComponent {
 
     const intervalosValidos: { inicio: Date; termino: Date }[] = [];
 
+    // É possível reduzir o nesting e separar em outro método?
     intervalos.forEach(intervalo => {
       if (
         intervalosValidos.length === 0 ||
@@ -120,6 +122,9 @@ export class AppComponent {
       dias += diff.days;
     });
 
+    meses += anos * 12;
+    anos = 0; // Resetar anos, pois agora foram convertidos para meses
+
     // Ajuste para dias excedentes (ex: 30 dias vira 1 mês)
     if (dias >= 30) {
       const mesesExtras = Math.floor(dias / 30);
@@ -128,18 +133,19 @@ export class AppComponent {
     }
 
     // Ajuste para meses excedentes (ex: 12 meses vira 1 ano)
-    if (meses >= 12) {
-      const anosExtras = Math.floor(meses / 12);
-      anos += anosExtras;
-      meses = meses % 12;
-    }
+    // if (meses >= 12) {
+    //   const anosExtras = Math.floor(meses / 12);
+    //   anos += anosExtras;
+    //   meses = meses % 12;
+    // }
 
     // Formatação do resultado
-    let anosStr = anos === 1 ? "1 ano" : anos > 1 ? `${anos} anos` : "";
-    let mesesStr = meses === 1 ? "1 mês" : meses > 0 ? `${meses} meses` : "";
+    // let anosStr = anos === 1 ? "1 ano" : anos > 1 ? `${anos} anos` : ""; TESTE
+    let mesesStr = meses === 1 ? "1 mês" : `${meses} meses`;
     let diasStr = dias === 1 ? "1 dia" : dias > 0 ? `${dias} dias` : "";
 
-    const partes = [anosStr, mesesStr, diasStr].filter(parte => parte !== "");
+    const partes = [mesesStr, diasStr].filter(parte => parte !== "");
+
     // Adiciona "e" antes do último elemento se houver mais de um componente
     if (partes.length > 1) {
       const ultimo = partes.pop();
@@ -202,6 +208,7 @@ export class AppComponent {
     window.removeEventListener('beforeunload', this.handleBeforeUnload);
   }
 
+  // É possível fazer uma inversão de if abaixo? Rennan
   ngOnInit(): void {
     if (sessionStorage.getItem('firstLoad') !== 'true') {
       sessionStorage.setItem('firstLoad', 'true');
