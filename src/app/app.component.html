@@ -14,13 +14,13 @@
 
         <div class="inicio">
           <span>Data de Início</span>
-          <input type="date"  id="inicio-{{i}}" [(ngModel)]="emprego.dataInicio" (ngModelChange)="validarDatas(i)" name="inicio-{{i}}">
+          <input type="date" readonly onfocus="this.removeAttribute('readonly')" id="inicio-{{i}}" [(ngModel)]="emprego.dataInicio" (ngModelChange)="validarDatas(i)" name="inicio-{{i}}">
         </div>
 
         <div class="termino">
           <span>Data de Término</span>
           <div class="termino-container">
-            <input type="date" id="termino-{{i}}" [(ngModel)]="emprego.dataTermino" (blur)="validarDatas(i)" name="termino-{{i}}">
+            <input type="date" readonly onfocus="this.removeAttribute('readonly')" id="termino-{{i}}" [(ngModel)]="emprego.dataTermino" (blur)="validarDatas(i)" name="termino-{{i}}">
             <button *ngIf="empregos.length > 1" mat-icon-button color="warn" class="remove-experience" (click)="removerExperiencia(i)">
               <mat-icon>delete</mat-icon>
             </button>
